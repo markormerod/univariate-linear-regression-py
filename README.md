@@ -1,8 +1,17 @@
-# univariate-linear-regression-py
-Univariate Linear Regression Python
+Univariate Linear Regression in Python
 
 Example usage:
 
 ```
 python univariate_linear_regression.py data.csv
+```
+
+Example csv:
+```
+x,y
+2,1.59788482652391
+4,2.60737973833946
+6,3.23524057383901
+8,4.58965803427639
+10,5.17196729026747
 ```
