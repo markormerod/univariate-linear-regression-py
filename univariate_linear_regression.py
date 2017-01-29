@@ -68,7 +68,7 @@ while True:
         rawtheta1 = raw_input("Θ₁: ")
         if rawtheta1 in ["quit", "q"]:
             print('')
-            sys.quit()
+            sys.exit()
         theta1 = float(rawtheta1)
 
         univar.runhypothesis(theta0, theta1, True)
