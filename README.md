@@ -1,4 +1,6 @@
-Univariate Linear Regression in Python
+### Univariate Linear Regression in Python
+
+Building simple machine-learning assisted predictor functions has never been so fun, or hacky!
 
 Example usage:
 
