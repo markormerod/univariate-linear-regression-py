@@ -15,7 +15,6 @@ class UnivarLinearRegression(object):
         self.best = None
         for row in raw:
             self.data.append([float(row[0]), float(row[1])])
-        self.normalize_data()
 
     def runhypothesis(self, theta0, theta1, bool_print):
         self.predicted = []
@@ -25,7 +24,8 @@ class UnivarLinearRegression(object):
             print('\nactual, predicted')
 
         for row in self.data:
-            predicted = theta0 + theta1 * row[0]
+            x = row[0]
+            predicted = theta0 + (theta1 * x)
             self.predicted.append(predicted)
             if bool_print:
                 print(', '.join([str(row[1]), str(predicted)]))
@@ -43,17 +43,27 @@ class UnivarLinearRegression(object):
         return result
 
     def run_gradient_descent(self, runs, alpha):
-        theta0, theta1 = 10, 10
+        theta0, theta1 = 0, 0
+        m = (float(len(self.data)))
 
         while runs >= 0:
-            result0 = 0
-            result1 = 0
-            for val in self.normalized:
-                result0 += (theta0 + theta1 * val[0]) - val[1]
-                result0 = theta0 - alpha * (1/(2*float(len(self.normalized)))) * result0
-            for val in self.normalized:
-                result1 += ((theta0 + theta1 * val[0]) - val[1]) * val[0]
-                result1 = theta1 - alpha * (1/(2*float(len(self.normalized)))) * result1
+            total_error = 0
+            for val in self.data:
+                x = val[0]
+                y = val[1]
+                hypothesis = theta0 + (theta1 * x)
+                total_error += hypothesis - y
+
+            result0 = theta0 - (alpha * (1.0/m) * total_error)
+
+            total_error = 0
+            for val in self.data:
+                x = val[0]
+                y = val[1]
+                hypothesis = theta0 + (theta1 * x)
+                total_error += (hypothesis - y) * x
+
+            result1 = theta1 - (alpha * (1.0/m) * total_error)
 
             runs -= 1
             theta0 = result0
@@ -67,7 +77,7 @@ class UnivarLinearRegression(object):
     def predict(self):
         print("Entering prediction mode. To continue function generation, type \"guess\": ")
         while True:
-            raw_x = raw_input("Enter an input value predict output using the best predictor function: ")
+            raw_x = raw_input("Enter an input value to predict output using the best predictor function: ")
             if raw_x in ["quit", "q"]:
                 sys.exit()
             elif raw_x in ["guess", "g"]:
@@ -76,22 +86,6 @@ class UnivarLinearRegression(object):
             y = self.best[2] + self.best[3] * x
             print(str(x) + " -> " + str(y))
 
-    def normalize_data(self):
-        self.normalized = []
-        x = [row[0] for row in self.data]
-        y = [row[1] for row in self.data]
-
-        max_x = max(x)
-        min_x = min(x)
-        diff_x = max_x - min_x
-
-        max_y = max(y)
-        min_y = min(y)
-        diff_y = max_y - min_y
-
-        for idx, val in enumerate(self.data):
-            self.normalized.append([(val[0] - min_x) / diff_x, (val[1] - min_y) / diff_y])
-            # print(str(self.normalized[idx][0]) + "\t" + str(self.normalized[idx][1]))
     def printdata(self):
         print(', '.join(self.header))
         for row in self.data:
@@ -115,14 +109,14 @@ class UnivarLinearRegression(object):
                     self.predict()
                 alpha = float(raw_alpha)
 
-                raw_n = raw_input("Amount of learning iterations (default 400): ")
+                raw_n = raw_input("Amount of learning iterations (default 10000000): ")
                 if raw_n in ["quit", "q"]:
                     print('')
                     sys.quit()
                 elif hasbest and raw_alpha in ["done", "d"]:
                     self.predict()
                 if raw_n == "":
-                    n = 400
+                    n = 10000000
                 else:
                     n = int(raw_n)
 
